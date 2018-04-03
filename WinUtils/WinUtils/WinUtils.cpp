@@ -44,6 +44,27 @@ bool Ut_isStart(std::string _exe)
 	return bRet;
 }
 
+int Ut_getPid(std::string _exe)
+{
+	int pid = -1;
+	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (INVALID_HANDLE_VALUE == hSnapshot) {
+		printf("获取进程列表失败");
+		return pid;
+	}
+	PROCESSENTRY32 pe = { sizeof(pe) };
+	for (BOOL ret = Process32First(hSnapshot, &pe); ret; ret = Process32Next(hSnapshot, &pe))
+	{
+		if (cgiStrEq(_exe.c_str(), pe.szExeFile))
+		{
+			printf("%s isStart\r\n", pe.szExeFile);
+			pid = pe.th32ProcessID;
+		}
+	}
+	CloseHandle(hSnapshot);
+	return pid;
+}
+
 std::string Ut_getTime_Hour()
 {
 	time_t tt = time(NULL);//这句返回的只是一个时间cuo
@@ -115,8 +136,32 @@ DWORD WINAPI ThreadFuncFirst(LPVOID param)
 	}
 	return 0;
 }
+#include <psapi.h> 
+void Ut_PrintMemoryInfo(DWORD processID)
+{
+	HANDLE hProcess;
+	::PROCESS_MEMORY_COUNTERS pmc;
+	// Print the process identifier.
+	//printf( "\nProcess ID: %u\n", processID );
+	// Print information about the memory usage of the process.
+	hProcess = OpenProcess(PROCESS_QUERY_INFORMATION |
+		PROCESS_VM_READ,
+		FALSE, processID);
+	if (NULL == hProcess)
+		return;
+	if (GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc)))
+	{
+		//printf( "\tPageFaultCount: %d\n", pmc.PageFaultCount );
+		//printf( "\tPageFaultCount: 0xX\n", pmc.PageFaultCount );
+		//printf( "\tPeakWorkingSetSize: 0xX\n",pmc.PeakWorkingSetSize );
+		//输出进程占用内存情况
+		//printf( "WorkingSetSize: %dk\n",pmc.WorkingSetSize / 1024 );
+		cout << "," << pmc.WorkingSetSize / 1024 << endl;
+		//printf( "\tWorkingSetSize: 0xX %dk\n", pmc.WorkingSetSize ,pmc.WorkingSetSize / 1024 );
 
-
+	}
+	CloseHandle(hProcess);
+}
 
 int main()
 {	//获取时间 如果是01:00
@@ -124,6 +169,10 @@ int main()
 	//查看目标是否关闭
 	//启动目标
 	//查看目标是否启动
+	//int pid = Ut_getPid(UT_EXE);
+	//Ut_PrintMemoryInfo(pid);
+
+
 	DWORD dwThreadID = 0;
 	HANDLE handleFirst = CreateThread(NULL, 0, ThreadFuncFirst, 0, 0, &dwThreadID);
 	if (!handleFirst)
