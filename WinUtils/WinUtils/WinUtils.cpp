@@ -10,6 +10,7 @@
 #include <memory>
 #include <iostream>
 #include <mutex>
+#include "base\common\secp256k1\Secp256k1.h"
 #pragma warning( disable : 4996 )
 
 #define cgiStrEq(a, b) (!strcmp((a), (b)))
@@ -151,17 +152,21 @@ void Ut_PrintMemoryInfo(DWORD processID)
 		return;
 	if (GetProcessMemoryInfo(hProcess, &pmc, sizeof(pmc)))
 	{
-		//printf( "\tPageFaultCount: %d\n", pmc.PageFaultCount );
-		//printf( "\tPageFaultCount: 0xX\n", pmc.PageFaultCount );
-		//printf( "\tPeakWorkingSetSize: 0xX\n",pmc.PeakWorkingSetSize );
+		printf( "\tPageFaultCount: %d\n", pmc.PageFaultCount );
+		printf( "\tPageFaultCount: 0xX\n", pmc.PageFaultCount );
+		printf( "\tPeakWorkingSetSize: 0xX\n",pmc.PeakWorkingSetSize );
 		//输出进程占用内存情况
-		//printf( "WorkingSetSize: %dk\n",pmc.WorkingSetSize / 1024 );
+		printf( "WorkingSetSize: %dk\n",pmc.WorkingSetSize / 1024 );
 		cout << "," << pmc.WorkingSetSize / 1024 << endl;
-		//printf( "\tWorkingSetSize: 0xX %dk\n", pmc.WorkingSetSize ,pmc.WorkingSetSize / 1024 );
+		printf( "\tWorkingSetSize: 0xX %dk\n", pmc.WorkingSetSize ,pmc.WorkingSetSize / 1024 );
 
 	}
 	CloseHandle(hProcess);
 }
+
+
+
+
 
 int main()
 {	//获取时间 如果是01:00
@@ -169,9 +174,27 @@ int main()
 	//查看目标是否关闭
 	//启动目标
 	//查看目标是否启动
-	//int pid = Ut_getPid(UT_EXE);
-	//Ut_PrintMemoryInfo(pid);
+#ifdef SECP256
+	CSecp256k1 se;
+	auto *ctx = se.getCtx();
+	const unsigned char s[32] = { 200,220,54,189,71,119,183,197,5,182,112,27,239,252,88,68,58,105,237,125,67,55,114,12,122,140,234,203,83,31,213,76 };
+	se.toPublic(s);
+#endif
+#ifdef PROC_MEM
+	int pid = Ut_getPid("dwm.exe");
 
+	for (unsigned i : {20, 16, 12, 8})
+	{
+		printf("i %d", i);
+	}
+
+
+	while (1)
+	{
+		Sleep(1000);
+		Ut_PrintMemoryInfo(pid);
+	}
+#endif
 
 	DWORD dwThreadID = 0;
 	HANDLE handleFirst = CreateThread(NULL, 0, ThreadFuncFirst, 0, 0, &dwThreadID);

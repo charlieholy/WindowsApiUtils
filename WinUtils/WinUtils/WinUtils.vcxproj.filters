@@ -16,6 +16,21 @@
     <Filter Include="utils">
       <UniqueIdentifier>{e7a84d22-0639-4edf-90e1-8e028648c3f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{bb069f7e-caa1-40ef-a834-bb0e1bea62b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\common">
+      <UniqueIdentifier>{4e8552c5-99a3-4016-9e4d-1cae7f6a1775}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\common\secp256k1">
+      <UniqueIdentifier>{e772b348-c0f2-4441-9616-283b0e77257a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\common\secp256k1\include">
+      <UniqueIdentifier>{20786a90-b86d-48ed-a550-60da6a0d8fd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base\common\secp256k1\libs">
+      <UniqueIdentifier>{5335fddd-4e0c-4491-8146-f434f5c5b1e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -30,6 +45,21 @@
     <ClInclude Include="utils\Cutils.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="base\common\secp256k1\include\secp256k1.h">
+      <Filter>base\common\secp256k1\include</Filter>
+    </ClInclude>
+    <ClInclude Include="base\common\secp256k1\include\secp256k1_ecdh.h">
+      <Filter>base\common\secp256k1\include</Filter>
+    </ClInclude>
+    <ClInclude Include="base\common\secp256k1\include\secp256k1_recovery.h">
+      <Filter>base\common\secp256k1\include</Filter>
+    </ClInclude>
+    <ClInclude Include="base\common\secp256k1\include\secp256k1_sha256.h">
+      <Filter>base\common\secp256k1\include</Filter>
+    </ClInclude>
+    <ClInclude Include="base\common\secp256k1\Secp256k1.h">
+      <Filter>base\common\secp256k1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -40,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="utils\Cutils.cpp">
       <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="base\common\secp256k1\Secp256k1.cpp">
+      <Filter>base\common\secp256k1</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
