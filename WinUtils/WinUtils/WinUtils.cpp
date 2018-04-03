@@ -56,6 +56,19 @@ std::string Ut_getTime_Hour()
 	return nowTime;
 }
 
+
+std::string Ut_getTime_day()
+{
+	time_t tt = time(NULL);//这句返回的只是一个时间cuo
+	tm* t = localtime(&tt);
+	std::string nowTime;
+	int size = 20;
+	std::unique_ptr<char[]> buf(new char[size]);
+	sprintf(buf.get(), "%d-%02d-%02d %02d:%02d:%02d", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
+	nowTime = std::string(buf.get(), buf.get() + size - 1);
+	return nowTime;
+}
+
 void Ut_goSystem(std::string cmd)
 {	
 	printf("system %s\r\n", cmd.c_str());
@@ -79,7 +92,7 @@ DWORD WINAPI ThreadFuncFirst(LPVOID param)
 			Ut_goSystem(UT_STOP);
 			if (!Ut_isStart(UT_EXE))
 			{	
-				printf("stop success!\r\n");
+				printf("%s stop success!\r\n", Ut_getTime_day().c_str());
 				g_UtSystemCmd = START;  //To reStart
 			}
 		}
@@ -88,7 +101,7 @@ DWORD WINAPI ThreadFuncFirst(LPVOID param)
 			Ut_goSystem(UT_START);
 			if (Ut_isStart(UT_EXE))
 			{
-				printf("start success!\r\n");
+				printf("%s start success!\r\n", Ut_getTime_day().c_str());
 				{
 					std::lock_guard<std::mutex> guard(__m_mtx);
 					canRestart = 0;  //  表示已经重启不能再连续重启
@@ -128,7 +141,7 @@ int main()
 		{
 			canRestart = 1;
 		}
-		else if ("12:00" > nowTime && nowTime > "11:00")
+		else if ("01:00" < nowTime && nowTime < "02:00")
 		{
 			//重启时间段
 			{
