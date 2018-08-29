@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Secp256k1.h"
 
 #include <array>
